@@ -1,0 +1,20 @@
+{
+  "contract": "DelegationTree",
+  "network": {
+    "name": "GenLayer StudioNet",
+    "chainId": "61999",
+    "rpc": "https://studio.genlayer.com/api"
+  },
+  "contractAddress": "0x0a3Ed4cDc845B42f4c982610681bcFeDDFFf1A5C",
+  "deploymentTransaction": "0xc4320389644748734976b51368e0ef47339274f8325c2144bb9559b031be99fa",
+  "deploymentStatus": "FINALIZED",
+  "deploymentExecution": "SUCCESS",
+  "sourcePath": "contracts/delegation_tree.py",
+  "sourceSha256": "81F39046A2189C2B7058E82515B9BB96ADFA66C8C4625DDB86A21B490FC45D7C",
+  "sourceMatchedDeployedCode": true,
+  "repositoryUrl": "https://github.com/sanity456/delegationtree",
+  "commit": null,
+  "submissionStatus": "PUBLIC_REPOSITORY_PORTAL_EVIDENCE_PENDING",
+  "evidenceFile": "STUDIONET_EVIDENCE.md",
+  "testedAt": "2026-10-23"
+}
