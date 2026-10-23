@@ -24,7 +24,7 @@ All listed transactions finalized. Expected rejection tests produced execution `
 | Close mandate | `0xfec26eb5d80e53563f945f039fd1723557b2a09d9efc5efe2975128e7ea97707` | SUCCESS |
 | Mutate closed mandate | `0x42081c3cff7d499fa437b18c16a82ed25825d671c674add05bf61bf3c9d185cb` | FINALIZED, expected ERROR; fresh readback remained `CLOSED` with same two nodes, reserved/spent amounts and empty actions |
 
-Local verification: GenVM AST lint passed (3 checks); direct test suite passed (11 tests). The SDK validate/typecheck command could not complete in this environment because its cached runner archive is missing a nested artifact; this is a tooling/setup limitation, not a reported contract error. `git diff --check` passed. No reviewer outcome is guaranteed.
+Local verification: GenVM AST lint passed (3 checks); SDK validation passed; standard typecheck passed with zero diagnostics; direct tests passed (11 tests). Strict Pyright mode reports 24 diagnostics, primarily redundant runtime type guards and unknown types from dynamic/SDK APIs; it is stricter than the standard check and does not indicate an SDK validation failure. No contract source was changed for these optional strict-mode diagnostics. `git diff --check` passed. No reviewer outcome is guaranteed.
 
 ## Obsolete deployment — do not submit
 
