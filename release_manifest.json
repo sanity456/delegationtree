@@ -13,7 +13,7 @@
   "sourceSha256": "81F39046A2189C2B7058E82515B9BB96ADFA66C8C4625DDB86A21B490FC45D7C",
   "sourceMatchedDeployedCode": true,
   "repositoryUrl": "https://github.com/sanity456/delegationtree",
-  "commit": null,
+  "commit": "9812a4ed4260c3cec57db960278be66383e0daf1",
   "submissionStatus": "PUBLIC_REPOSITORY_PORTAL_EVIDENCE_PENDING",
   "evidenceFile": "STUDIONET_EVIDENCE.md",
   "testedAt": "2026-10-23"
