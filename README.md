@@ -16,4 +16,4 @@ GenLayer judges semantic containment and action fit. Deterministic code enforces
     genvm-lint typecheck contracts/delegation_tree.py --strict
     python -m pytest tests/direct -q -p no:cacheprovider
 
-The earlier deployment used a shared global registry and did not reserve descendant-node slots. It must not be submitted. The corrected source is under local verification; deployment, source-byte comparison, and refreshed live abuse evidence are still required. See `STUDIONET_EVIDENCE.md`, `release_manifest.json`, and `SUBMISSION_CHECKLIST.md` for release gate status.
+The earlier deployment used a shared global registry and did not reserve descendant-node slots; do not submit it. The corrected source is deployed at `0x40BA2E7200753aa11284C92Ec544c2D4795BA538`, and its deployed bytes were verified against the corrected source. Live evidence is recorded in `STUDIONET_EVIDENCE.md` and `release_manifest.json`. SDK validate/typecheck remains incomplete because the local cached runner archive is missing a nested artifact; see `SUBMISSION_CHECKLIST.md` and clear that tooling gate before submission.

@@ -6,21 +6,49 @@
     "rpc": "https://studio.genlayer.com/api"
   },
   "repositoryUrl": "https://github.com/sanity456/delegationtree",
+  "releaseCommit": "d2d66ac2fcb13e824971e68eb4063d16448e8501",
   "correctedSource": {
     "sourcePath": "contracts/delegation_tree.py",
+    "sourcePermalink": "https://github.com/sanity456/delegationtree/blob/d2d66ac2fcb13e824971e68eb4063d16448e8501/contracts/delegation_tree.py",
     "runner": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6",
     "sourceSha256": "a78b92b95c657e85197609ca8bc3143f73eafe48f7ae7999cf8df0083854fc4e",
-    "deploymentStatus": "NOT_DEPLOYED",
-    "sourceMatchedDeployedCode": false
+    "deploymentStatus": "DEPLOYED_AND_SOURCE_MATCHED",
+    "sourceMatchedDeployedCode": true
   },
-  "submissionStatus": "BLOCKED_CORRECTED_SOURCE_NOT_DEPLOYED",
+  "correctedDeployment": {
+    "address": "0x40BA2E7200753aa11284C92Ec544c2D4795BA538",
+    "explorerUrl": "https://explorer-studio.genlayer.com/address/0x40BA2E7200753aa11284C92Ec544c2D4795BA538",
+    "deploymentTransaction": "0x46a1d37af681edd97b424617fb2130120b672823b3ce4da708bfe820b13defa5",
+    "transactionUrl": "https://explorer-studio.genlayer.com/tx/0x46a1d37af681edd97b424617fb2130120b672823b3ce4da708bfe820b13defa5",
+    "status": "FINALIZED",
+    "consensusResult": "MAJORITY_AGREE",
+    "executionResult": "SUCCESS"
+  },
+  "submissionStatus": "TECHNICAL_EVIDENCE_RECORDED_SDK_VALIDATION_TOOLING_LIMITATION_REMAINS",
   "previousDeployment": {
     "address": "0x0a3Ed4cDc845B42f4c982610681bcFeDDFFf1A5C",
     "sourceSha256": "81F39046A2189C2B7058E82515B9BB96ADFA66C8C4625DDB86A21B490FC45D7C",
-    "status": "OBSOLETE_DO_NOT_SUBMIT_SHARED_CAPACITY_BUG"
+    "status": "OBSOLETE_DO_NOT_SUBMIT_SHARED_CAPACITY_AND_NODE_SLOT_BUG"
   },
-  "releaseCommit": "d2d66ac2fcb13e824971e68eb4063d16448e8501",
-  "transactions": [],
-  "liveReadbacks": [],
+  "liveChecks": [
+    {"name": "creator_A_capacity_00", "transaction": "0xdaad09a48d7dc259e9e8e5d6e00a9ca55bb54fcbe31dbdbb612b2dd264883bea", "status": "FINALIZED", "executionResult": "SUCCESS"},
+    {"name": "creator_B_same_local_id_namespace_isolation", "transaction": "0x7eb2a548e3e194226f294615baa66f43aab6958599cb1915037ecdd0de4f8b9a", "status": "FINALIZED", "executionResult": "SUCCESS"},
+    {"name": "create_node_budget_mandate", "transaction": "0xba5fdfa6b036bca0ad3ae26e980c28ca0c06808d404982cb3881b7ca01b44bc4", "status": "FINALIZED", "executionResult": "SUCCESS"},
+    {"name": "valid_child_delegation_within_scope_and_budget", "transaction": "0x594610848f3b22278186e94d29b195d277964d68cc71e1a78217fc61f3dbfc73", "status": "FINALIZED", "executionResult": "SUCCESS"},
+    {"name": "exceed_reserved_node_slots_rejected", "transaction": "0xefc765ab11c612d341f3f5407d1ec12f829c77fe1525fc4db87b63c9657bb7f5", "status": "FINALIZED", "executionResult": "ERROR_EXPECTED_FAIL_CLOSED"},
+    {"name": "close_mandate", "transaction": "0xfec26eb5d80e53563f945f039fd1723557b2a09d9efc5efe2975128e7ea97707", "status": "FINALIZED", "executionResult": "SUCCESS"},
+    {"name": "closed_mandate_mutation_rejected", "transaction": "0x42081c3cff7d499fa437b18c16a82ed25825d671c674add05bf61bf3c9d185cb", "status": "FINALIZED", "executionResult": "ERROR_EXPECTED_FAIL_CLOSED"}
+  ],
+  "liveReadbacks": [
+    "Creator-scoped capacity_00 records are independent.",
+    "Rejected descendant-slot overflow left the two-node mandate unchanged.",
+    "After closed-mandate mutation rejection, get_mandate returned status CLOSED, two nodes, unchanged reservation/spend counters, and no actions."
+  ],
+  "localVerification": {
+    "genvmAstLint": "PASS_3_CHECKS",
+    "directTests": "PASS_11",
+    "sdkValidateTypecheck": "NOT_COMPLETED_MISSING_CACHED_RUNNER_ARTIFACT",
+    "gitDiffCheck": "PASS"
+  },
   "testedAt": "2026-10-23"
 }
