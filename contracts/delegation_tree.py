@@ -8,9 +8,9 @@ from typing import Any, NoReturn, cast
 
 E_EXPECTED = "[EXPECTED]"
 E_LLM = "[LLM_ERROR]"
-MAX_MANDATES = 20
+MAX_MANDATES_PER_CREATOR = 20
 MAX_NODES = 15
-MAX_ACTIONS = 20
+MAX_ACTIONS_PER_NODE = 20
 MAX_SCOPE_BYTES = 512
 MAX_ACTION_BYTES = 256
 MAX_TOTAL_UNITS = 1_000_000
@@ -32,6 +32,8 @@ def _clean(value: str, field: str, maximum: int) -> str:
 
 
 def _identifier(value: str, field: str) -> str:
+    if not isinstance(value, str):
+        _fail(f"invalid_{field}")
     result = value.strip().lower()
     if not result or len(result) > 48:
         _fail(f"invalid_{field}")
@@ -42,6 +44,8 @@ def _identifier(value: str, field: str) -> str:
 
 
 def _account(value: str) -> str:
+    if not isinstance(value, str):
+        _fail("invalid_delegate_address")
     result = value.strip().lower()
     if len(result) != 42 or not result.startswith("0x"):
         _fail("invalid_delegate_address")
@@ -51,7 +55,7 @@ def _account(value: str) -> str:
 
 
 class DelegationTree(gl.Contract):
-    mandate_ids: DynArray[str]
+    mandates_per_creator: TreeMap[str, u256]
     mandates: TreeMap[str, str]
 
     def __init__(self):
@@ -59,6 +63,24 @@ class DelegationTree(gl.Contract):
 
     def _sender(self) -> str:
         return str(gl.message.sender_address).lower()
+
+    def _key(self, reference: str) -> str:
+        if not isinstance(reference, str):
+            _fail("invalid_mandate_reference")
+        parts = reference.split("|")
+        if len(parts) == 1:
+            return self._sender() + "|" + _identifier(reference, "mandate_id")
+        if len(parts) != 2:
+            _fail("invalid_mandate_reference")
+        return _account(parts[0]) + "|" + _identifier(parts[1], "mandate_id")
+
+    def _action_key(self, reference: str) -> str:
+        if not isinstance(reference, str):
+            _fail("invalid_action_reference")
+        parts = reference.split(":")
+        if len(parts) != 2:
+            _fail("action_reference_requires_node_id")
+        return _identifier(parts[0], "node_id") + ":" + _identifier(parts[1], "action_id")
 
     def _load(self, mandate_id: str) -> dict[str, Any]:
         encoded = self.mandates.get(mandate_id, "")
@@ -87,17 +109,18 @@ class DelegationTree(gl.Contract):
             _fail("only_mandate_creator")
 
     @gl.public.write
-    def create_mandate(self, mandate_id: str, root_scope: str, total_units: u256) -> None:
-        key = _identifier(mandate_id, "mandate_id")
+    def create_mandate(self, mandate_id: str, root_scope: str, total_units: u256) -> str:
+        creator = self._sender()
+        key = creator + "|" + _identifier(mandate_id, "mandate_id")
         if self.mandates.get(key, ""):
             _fail("mandate_id_already_used")
-        if len(self.mandate_ids) >= MAX_MANDATES:
-            _fail("mandate_limit_reached")
+        count = int(self.mandates_per_creator.get(creator, u256(0)))
+        if count >= MAX_MANDATES_PER_CREATOR:
+            _fail("creator_mandate_limit_reached")
         amount = int(total_units)
         if amount < 1 or amount > MAX_TOTAL_UNITS:
             _fail("invalid_total_units")
         scope = _clean(root_scope, "root_scope", MAX_SCOPE_BYTES)
-        creator = self._sender()
         data: dict[str, Any] = {
             "creator": creator,
             "scope": scope,
@@ -113,14 +136,17 @@ class DelegationTree(gl.Contract):
                     "spent": 0,
                     "reserved": 0,
                     "pending": 0,
+                    "node_slots": MAX_NODES,
+                    "allocated_node_slots": 0,
                     "status": "OPEN",
                 }
             },
             "actions": {},
             "scope_decisions": {},
         }
-        self.mandate_ids.append(key)
+        self.mandates_per_creator[creator] = u256(count + 1)
         self._save(key, data)
+        return key
 
     @gl.public.write
     def delegate(
@@ -130,8 +156,9 @@ class DelegationTree(gl.Contract):
         child_delegate: str,
         child_scope: str,
         child_units: u256,
+        child_node_slots: u256 = u256(1),
     ) -> None:
-        key = _identifier(mandate_id, "mandate_id")
+        key = self._key(mandate_id)
         data = self._load(key)
         if data["status"] != "ACTIVE":
             _fail("mandate_not_active")
@@ -142,6 +169,9 @@ class DelegationTree(gl.Contract):
             _fail("parent_node_not_open")
         if len(data["nodes"]) >= MAX_NODES:
             _fail("node_limit_reached")
+        slots = int(child_node_slots)
+        if slots < 1 or 1 + int(parent["allocated_node_slots"]) + slots > int(parent["node_slots"]):
+            _fail("parent_node_slots_exceeded")
         delegate = _account(child_delegate)
         if delegate == parent["delegate"]:
             _fail("child_delegate_must_differ")
@@ -211,9 +241,12 @@ SCOPE_PAYLOAD_END"""
             "spent": 0,
             "reserved": 0,
             "pending": 0,
+            "node_slots": slots,
+            "allocated_node_slots": 0,
             "status": "OPEN",
         }
         parent["reserved"] = int(parent["reserved"]) + amount
+        parent["allocated_node_slots"] = int(parent["allocated_node_slots"]) + slots
         parent["children"] = cast(list[str], parent.get("children", [])) + [child_id]
         data["scope_decisions"][child_id] = decision
         self._save(key, data)
@@ -226,8 +259,8 @@ SCOPE_PAYLOAD_END"""
         action_id: str,
         action_description: str,
         units: u256,
-    ) -> None:
-        key = _identifier(mandate_id, "mandate_id")
+    ) -> str:
+        key = self._key(mandate_id)
         data = self._load(key)
         if data["status"] != "ACTIVE":
             _fail("mandate_not_active")
@@ -236,11 +269,11 @@ SCOPE_PAYLOAD_END"""
         self._only_delegate(node)
         if node["status"] != "OPEN":
             _fail("node_not_open")
-        request = _identifier(action_id, "action_id")
+        request = node_key + ":" + _identifier(action_id, "action_id")
         if request in data["actions"]:
             _fail("action_id_already_used")
-        if len(data["actions"]) >= MAX_ACTIONS:
-            _fail("action_limit_reached")
+        if sum(1 for action in data["actions"].values() if action["node"] == node_key) >= MAX_ACTIONS_PER_NODE:
+            _fail("node_action_limit_reached")
         amount = int(units)
         if amount < 1 or amount > MAX_TOTAL_UNITS:
             _fail("invalid_action_units")
@@ -257,12 +290,15 @@ SCOPE_PAYLOAD_END"""
             "judgment": "",
         }
         self._save(key, data)
+        return request
 
     @gl.public.write
     def assess_action(self, mandate_id: str, action_id: str) -> None:
-        key = _identifier(mandate_id, "mandate_id")
+        key = self._key(mandate_id)
         data = self._load(key)
-        request = _identifier(action_id, "action_id")
+        if data["status"] != "ACTIVE":
+            _fail("mandate_not_active")
+        request = self._action_key(action_id)
         action = data["actions"].get(request)
         if not isinstance(action, dict):
             _fail("action_not_found")
@@ -288,7 +324,7 @@ ACTION_END"""
                 _fail("invalid_action_status", E_LLM)
             return {"status": cast(str, status)}
 
-        def verify_action(leader: gl.vm.Result[dict[str, str]]) -> bool:
+        def verify_action(leader: gl.vm.Result[dict[str, Any]]) -> bool:
             if not isinstance(leader, gl.vm.Return):
                 return False
             try:
@@ -319,8 +355,10 @@ ACTION_END"""
 
     @gl.public.write
     def revoke_unused_branch(self, mandate_id: str, parent_node_id: str, child_node_id: str) -> None:
-        key = _identifier(mandate_id, "mandate_id")
+        key = self._key(mandate_id)
         data = self._load(key)
+        if data["status"] != "ACTIVE":
+            _fail("mandate_not_active")
         parent_id = _identifier(parent_node_id, "parent_node_id")
         child_id = _identifier(child_node_id, "child_node_id")
         parent = self._node(data, parent_id)
@@ -351,7 +389,7 @@ ACTION_END"""
 
     @gl.public.write
     def close_mandate(self, mandate_id: str) -> None:
-        key = _identifier(mandate_id, "mandate_id")
+        key = self._key(mandate_id)
         data = self._load(key)
         self._only_creator(data)
         if data["status"] != "ACTIVE":
@@ -363,14 +401,14 @@ ACTION_END"""
 
     @gl.public.view
     def get_mandate(self, mandate_id: str) -> dict[str, Any]:
-        key = _identifier(mandate_id, "mandate_id")
+        key = self._key(mandate_id)
         data = self._load(key)
         return {"mandate_id": key, **data}
 
     @gl.public.view
     def get_action(self, mandate_id: str, action_id: str) -> dict[str, Any]:
-        key = _identifier(mandate_id, "mandate_id")
-        request = _identifier(action_id, "action_id")
+        key = self._key(mandate_id)
+        request = self._action_key(action_id)
         data = self._load(key)
         action = data["actions"].get(request)
         if not isinstance(action, dict):

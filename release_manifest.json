@@ -5,16 +5,22 @@
     "chainId": "61999",
     "rpc": "https://studio.genlayer.com/api"
   },
-  "contractAddress": "0x0a3Ed4cDc845B42f4c982610681bcFeDDFFf1A5C",
-  "deploymentTransaction": "0xc4320389644748734976b51368e0ef47339274f8325c2144bb9559b031be99fa",
-  "deploymentStatus": "FINALIZED",
-  "deploymentExecution": "SUCCESS",
-  "sourcePath": "contracts/delegation_tree.py",
-  "sourceSha256": "81F39046A2189C2B7058E82515B9BB96ADFA66C8C4625DDB86A21B490FC45D7C",
-  "sourceMatchedDeployedCode": true,
   "repositoryUrl": "https://github.com/sanity456/delegationtree",
-  "commit": "9812a4ed4260c3cec57db960278be66383e0daf1",
-  "submissionStatus": "PUBLIC_REPOSITORY_PORTAL_EVIDENCE_PENDING",
-  "evidenceFile": "STUDIONET_EVIDENCE.md",
+  "correctedSource": {
+    "sourcePath": "contracts/delegation_tree.py",
+    "runner": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6",
+    "sourceSha256": "a78b92b95c657e85197609ca8bc3143f73eafe48f7ae7999cf8df0083854fc4e",
+    "deploymentStatus": "NOT_DEPLOYED",
+    "sourceMatchedDeployedCode": false
+  },
+  "submissionStatus": "BLOCKED_CORRECTED_SOURCE_NOT_DEPLOYED",
+  "previousDeployment": {
+    "address": "0x0a3Ed4cDc845B42f4c982610681bcFeDDFFf1A5C",
+    "sourceSha256": "81F39046A2189C2B7058E82515B9BB96ADFA66C8C4625DDB86A21B490FC45D7C",
+    "status": "OBSOLETE_DO_NOT_SUBMIT_SHARED_CAPACITY_BUG"
+  },
+  "releaseCommit": "PENDING_CORRECTED_SOURCE_COMMIT",
+  "transactions": [],
+  "liveReadbacks": [],
   "testedAt": "2026-10-23"
 }

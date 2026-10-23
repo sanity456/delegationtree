@@ -1,15 +1,15 @@
 # Submission checklist
 
 - [x] Standalone bounded contract with a mechanism distinct from workspace projects
+- [x] Fixed global-cap exhaustion: per-creator mandates, parent-reserved child node slots, and per-node action limits/IDs
 - [x] Pinned GenVM runner and source provenance
 - [x] Static GenVM lint and semantic validation pass
-- [x] Strict typecheck reports zero errors/warnings; direct tests: 6 passed
-- [x] StudioNet deployment finalized; deployed source matches local source
-- [x] Live nested delegation and in-scope action approved with read-backs
-- [x] Local StudioNet transaction and source-hash evidence recorded in `STUDIONET_EVIDENCE.md`
-- [x] Successful mandate/delegation/action receipts independently visible in public StudioNet Explorer
+- [x] Strict typecheck reports zero errors/warnings with informational SDK typing notices; direct tests: 11 passed
+- [ ] Deploy corrected source and compare raw deployed bytes to the pushed Git blob
+- [ ] Demonstrate isolated creator capacity and parent-reserved descendant-node capacity on StudioNet
+- [ ] Record fresh successful and expected-failure receipts with execution results and read-backs
 - [x] Publish repository publicly and record repository URL and source-release commit in `release_manifest.json`
-- [ ] Add/verify required GitHub Repository, Studio Contract, and Explorer Contract evidence links in the Portal while logged out
-- [ ] Recheck that every submitted link is accessible and the source at the submitted commit matches the deployed source
+- [ ] Add/verify GitHub Repository, GitHub source file, release manifest, and Explorer contract/transaction links in the Portal while logged out
+- [ ] Recheck every link anonymously and pin the source evidence to the corrected deployment commit
 
-This is not submission-ready until the public-source and Portal-evidence items are complete. No reviewer outcome is guaranteed.
+The old deployment is not submission-ready. Do not resubmit it. Submission readiness depends on every corrected deployment/evidence gate above; no reviewer outcome is guaranteed.
