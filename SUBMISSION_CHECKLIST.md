@@ -8,6 +8,7 @@
 - [ ] Optional strict Pyright mode reports 24 diagnostics, primarily redundant type guards and unknown SDK/API types; disclosed in `STUDIONET_EVIDENCE.md` (no source/deployment change made solely to silence these)
 - [x] Corrected StudioNet deployment finalized successfully; deployed bytes matched corrected source
 - [x] Live creator namespace, valid delegation, descendant-slot rejection, close, and closed-mutation rejection checks recorded with reads
+- [x] Successful delegated action assessed on StudioNet; `APPROVED` readback records 15 units spent from the child's 40-unit allocation
 - [x] Public repository and commit-pinned source link recorded in `release_manifest.json`
 - [ ] Before submission, independently open every repository/source/Explorer URL while logged out and ensure Portal evidence uses corrected deployment details, not obsolete ones
 - [ ] Before submission, check the Portal preview; reviewer acceptance cannot be guaranteed

@@ -26,6 +26,19 @@ All listed transactions finalized. Expected rejection tests produced execution `
 
 Local verification: GenVM AST lint passed (3 checks); SDK validation passed; standard typecheck passed with zero diagnostics; direct tests passed (11 tests). Strict Pyright mode reports 24 diagnostics, primarily redundant runtime type guards and unknown types from dynamic/SDK APIs; it is stricter than the standard check and does not indicate an SDK validation failure. No contract source was changed for these optional strict-mode diagnostics. `git diff --check` passed. No reviewer outcome is guaranteed.
 
+## Completed delegated action
+
+A fresh mandate `review_action_20261023` was created under participant 2, who delegated the accessible-signage sub-scope and 40 units to participant 3 with one child slot. Participant 3 submitted a 15-unit signage action. Validators agreed it fit the delegated scope; the final action readback was `APPROVED` / `WITHIN_SCOPE`, with 15 spent, zero pending, and 40 still reserved by the root.
+
+| Step | Explorer transaction | Status / execution / votes |
+| --- | --- | --- |
+| Create review action mandate | https://explorer-studio.genlayer.com/tx/0x205453ffcb8bd179121a2db46beea447e7bc713f8e1f081447005e16812f4b04 | FINALIZED / SUCCESS / `[1,5,1,5,1]` |
+| Delegate 40 units and one child slot | https://explorer-studio.genlayer.com/tx/0xaecc46d98af78396a4222a5e600ccea82c2b8a66114c661db74668da01ad65b9 | FINALIZED / SUCCESS / `[5,5,1,1,1]` |
+| Submit 15-unit child action | https://explorer-studio.genlayer.com/tx/0x96229b2d6d63dbf827fbc7a4cdea800d7965766a0641b7601da3f96176261b87 | FINALIZED / SUCCESS / `[1,5,1,5,1]` |
+| Assess and approve within-scope action | https://explorer-studio.genlayer.com/tx/0xb22889f3d3579cdfa37de229e446a8d47bd1ee08db62d905dc05bc6fb737d791 | FINALIZED / SUCCESS / `[1,5,5,1,1]` |
+
+Final mandate readback key: `0x380516bf492a6fb052e04a4ceeeb2f8d8e3b1dde|review_action_20261023`; action key `2:accessible_signage`; child capacity 40, spent 15, pending 0; root reserved 40. These abstract units record authorization accounting; no funds or real-world work were transferred or verified.
+
 ## Obsolete deployment — do not submit
 
 - Address: `0x0a3Ed4cDc845B42f4c982610681bcFeDDFFf1A5C`

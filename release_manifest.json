@@ -24,7 +24,7 @@
     "consensusResult": "MAJORITY_AGREE",
     "executionResult": "SUCCESS"
   },
-  "submissionStatus": "TECHNICAL_CHECKS_PASS_STANDARD_TYPECHECK_PASS_STRICT_DIAGNOSTICS_DISCLOSED_PORTAL_REVIEW_PENDING",
+  "submissionStatus": "TECHNICAL_AND_LIVE_EVIDENCE_PASS_STANDARD_TYPECHECK_PASS_STRICT_DIAGNOSTICS_DISCLOSED_PORTAL_REVIEW_PENDING",
   "previousDeployment": {
     "address": "0x0a3Ed4cDc845B42f4c982610681bcFeDDFFf1A5C",
     "sourceSha256": "81F39046A2189C2B7058E82515B9BB96ADFA66C8C4625DDB86A21B490FC45D7C",
@@ -37,12 +37,17 @@
     {"name": "valid_child_delegation_within_scope_and_budget", "transaction": "0x594610848f3b22278186e94d29b195d277964d68cc71e1a78217fc61f3dbfc73", "status": "FINALIZED", "executionResult": "SUCCESS"},
     {"name": "exceed_reserved_node_slots_rejected", "transaction": "0xefc765ab11c612d341f3f5407d1ec12f829c77fe1525fc4db87b63c9657bb7f5", "status": "FINALIZED", "executionResult": "ERROR_EXPECTED_FAIL_CLOSED"},
     {"name": "close_mandate", "transaction": "0xfec26eb5d80e53563f945f039fd1723557b2a09d9efc5efe2975128e7ea97707", "status": "FINALIZED", "executionResult": "SUCCESS"},
-    {"name": "closed_mandate_mutation_rejected", "transaction": "0x42081c3cff7d499fa437b18c16a82ed25825d671c674add05bf61bf3c9d185cb", "status": "FINALIZED", "executionResult": "ERROR_EXPECTED_FAIL_CLOSED"}
+    {"name": "closed_mandate_mutation_rejected", "transaction": "0x42081c3cff7d499fa437b18c16a82ed25825d671c674add05bf61bf3c9d185cb", "status": "FINALIZED", "executionResult": "ERROR_EXPECTED_FAIL_CLOSED"},
+    {"name": "create_live_action_mandate", "transaction": "0x205453ffcb8bd179121a2db46beea447e7bc713f8e1f081447005e16812f4b04", "status": "FINALIZED", "executionResult": "SUCCESS", "votes": [1, 5, 1, 5, 1]},
+    {"name": "delegate_action_scope_and_quota", "transaction": "0xaecc46d98af78396a4222a5e600ccea82c2b8a66114c661db74668da01ad65b9", "status": "FINALIZED", "executionResult": "SUCCESS", "votes": [5, 5, 1, 1, 1]},
+    {"name": "submit_15_unit_delegated_action", "transaction": "0x96229b2d6d63dbf827fbc7a4cdea800d7965766a0641b7601da3f96176261b87", "status": "FINALIZED", "executionResult": "SUCCESS", "votes": [1, 5, 1, 5, 1]},
+    {"name": "assess_approve_delegated_action", "transaction": "0xb22889f3d3579cdfa37de229e446a8d47bd1ee08db62d905dc05bc6fb737d791", "status": "FINALIZED", "executionResult": "SUCCESS", "votes": [1, 5, 5, 1, 1]}
   ],
   "liveReadbacks": [
     "Creator-scoped capacity_00 records are independent.",
     "Rejected descendant-slot overflow left the two-node mandate unchanged.",
-    "After closed-mandate mutation rejection, get_mandate returned status CLOSED, two nodes, unchanged reservation/spend counters, and no actions."
+    "After closed-mandate mutation rejection, get_mandate returned status CLOSED, two nodes, unchanged reservation/spend counters, and no actions.",
+    "review_action_20261023 child action 2:accessible_signage was APPROVED / WITHIN_SCOPE; child capacity 40, spent 15, pending 0; root reserved 40."
   ],
   "localVerification": {
     "genvmAstLint": "PASS_3_CHECKS",
